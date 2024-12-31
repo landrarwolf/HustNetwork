@@ -13,7 +13,7 @@ import subprocess
 import requests
 from PySide6 import QtCore, QtWidgets, QtGui
 import configparser
-import rc_icon
+import resources_rc
 
 
 def remove_readonly(func, path, _):
@@ -217,21 +217,53 @@ class HustNetworkGUI(QtWidgets.QWidget):
         self.config = configparser.ConfigParser()
         if os.path.exists("config.ini"):
             self.config.read("config.ini")  # 读取配置文件
+            # 确保所有必要的配置项都存在
+            if not self.config.has_section('network'):
+                self.config.add_section('network')
+            if not self.config.has_section('normal'):
+                self.config.add_section('normal')
+            
+            # 设置默认值
+            default_network = {
+                'username': '',
+                'password': '',
+                'ping_interval': '15',
+                'ping_dns1': '202.114.0.242',
+                'ping_dns2': '223.5.5.5'
+            }
+            default_normal = {
+                'silent_start': 'False'
+            }
+            
+            # 使用默认值填充缺失的选项
+            for key, value in default_network.items():
+                if not self.config.has_option('network', key):
+                    self.config.set('network', key, value)
+            
+            for key, value in default_normal.items():
+                if not self.config.has_option('normal', key):
+                    self.config.set('normal', key, value)
+            
+            # 从配置文件读取值
             self.username.setText(self.config.get('network', 'username'))
             self.password.setText(self.config.get('network', 'password'))
-            self.ping_interval.setText(
-                self.config.get('network', 'ping_interval'))
+            self.ping_interval.setText(self.config.get('network', 'ping_interval'))
             self.ping_dns1.setText(self.config.get('network', 'ping_dns1'))
             self.ping_dns2.setText(self.config.get('network', 'ping_dns2'))
-            self.silent_start.setChecked(
-                self.config.getboolean('normal', 'silent_start'))
+            self.silent_start.setChecked(self.config.getboolean('normal', 'silent_start'))
+            
+            # 保存更新后的配置
+            with open('config.ini', 'w') as f:
+                self.config.write(f)
         else:
             self.config['network'] = {
                 'username': '',
                 'password': '',
-                'ping_interval': '',
-                'ping_dns1': ''}
-            self.config['normal'] = {'silent_start': ''}
+                'ping_interval': '15',
+                'ping_dns1': '202.114.0.242',
+                'ping_dns2': '223.5.5.5'
+            }
+            self.config['normal'] = {'silent_start': 'False'}
             with open('config.ini', 'w') as f:
                 self.config.write(f)
 

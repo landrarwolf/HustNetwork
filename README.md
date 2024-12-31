@@ -1,4 +1,4 @@
- # HustNetwork GUI
+# HustNetwork GUI
 
 本项目基于 [原版HustNetwork](https://github.com/jiegec/hust-network) 开发，在此特别感谢原作者 [@jiegec](https://github.com/jiegec) 的开源贡献。
 
@@ -14,6 +14,7 @@
 - 断线自动重连
 - 配置文件保存功能
 - 支持静默启动
+- 支持程序图标显示
 
 ## 使用方法
 
@@ -31,6 +32,29 @@
    python HustNetwork_GUI.py
    ```
 
+### 方式三：从源码打包（开发者用）
+1. 安装打包依赖：
+   ```bash
+   pip install pyinstaller
+   ```
+2. 编译资源文件：
+   ```bash
+   pyside6-rcc resources.qrc -o resources_rc.py
+   ```
+3. 使用以下任一方式打包：
+   - 使用 spec 文件（推荐）：
+     ```bash
+     pyinstaller HustNetwork_GUI.spec
+     ```
+   - 使用构建脚本：
+     ```bash
+     .\build.bat
+     ```
+   - 使用命令行：
+     ```bash
+     pyinstaller --onefile --windowed --icon=icon/network.ico HustNetwork_GUI.py
+     ```
+
 ## 使用说明
 
 1. 首次运行时，输入你的校园网账号和密码
@@ -43,6 +67,22 @@
 - 程序需要保持运行以维持认证状态
 - 支持通过路由器接入校园网的设备使用
 - 配置文件会保存在程序所在目录的 `config.ini` 中
+- 程序图标使用 Qt 资源系统管理，打包后无需额外的图标文件
+
+## 目录结构
+
+```
+.
+├── HustNetwork_GUI.py    # 主程序
+├── HustNetwork_GUI.spec  # PyInstaller 配置文件
+├── build.bat            # Windows 构建脚本
+├── requirements.txt     # Python 依赖
+├── resources.qrc        # Qt 资源文件
+├── resources_rc.py      # 编译后的资源文件
+└── icon/               # 图标文件目录
+    ├── network.ico     # Windows 程序图标
+    └── network.png     # 系统托盘图标
+```
 
 ## 相关项目
 

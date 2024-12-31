@@ -1,0 +1,7 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource>
+        <file>icon/network.png</file>
+        <file>icon/network.ico</file>
+    </qresource>
+</RCC> 
