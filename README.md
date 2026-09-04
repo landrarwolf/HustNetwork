@@ -39,37 +39,25 @@ HustNetwork GUI 是一款面向 Windows 的华中科技大学校园网自动认�
 
 ### 方式三：从源码打包（开发者使用）
 
-1. 安装打包依赖：
+1. 安装运行和打包依赖：
 
    ```bash
-   pip install pyinstaller
+   pip install -r requirements-build.txt
    ```
 
-2. 编译资源文件：
+2. 如修改过图标资源，重新编译资源文件：
 
    ```bash
    pyside6-rcc resources.qrc -o resources_rc.py
    ```
 
-3. 使用以下任一方式打包：
+3. 使用构建脚本：
 
-   - 使用 spec 文件（推荐）：
+   ```powershell
+   .\build.bat
+   ```
 
-     ```bash
-     pyinstaller HustNetwork_GUI.spec
-     ```
-
-   - 使用构建脚本：
-
-     ```powershell
-     .\build.bat
-     ```
-
-   - 使用命令行：
-
-     ```bash
-     pyinstaller --onefile --windowed --icon=icon/network.ico HustNetwork_GUI.py
-     ```
+   成品位于 `dist\HustNetwork_GUI.exe`。发布时只需交付此文件（或它的压缩包），不要将 `.venv`、`build`、`dist` 以外的构建目录或 pip 缓存一并发布。
 
 ## 使用说明
 
@@ -77,6 +65,7 @@ HustNetwork GUI 是一款面向 Windows 的华中科技大学校园网自动认�
 2. 点击“开启服务”启动认证。
 3. 程序可以最小化到系统托盘。
 4. 可按需启用“保存配置”和“静默启动”。
+5. 断线重连间隔必须为 1 到 86400 秒之间的整数；默认值为 15 秒。
 
 ## 其他说明
 
@@ -84,15 +73,17 @@ HustNetwork GUI 是一款面向 Windows 的华中科技大学校园网自动认�
 - 支持通过路由器接入校园网的设备使用
 - 配置文件保存在程序所在目录的 `config.ini` 中
 - 程序图标使用 Qt 资源系统管理，打包后无需额外的图标文件
+- `requirements.txt` 只包含运行依赖；`requirements-build.txt` 额外包含 PyInstaller。
+- 构建脚本只收集程序实际导入的 Qt Essentials 组件及必要的平台插件，不会再全量复制 PySide6/Shiboken6。`--onefile` 模式启动时会短暂解压到系统临时目录，这是 PyInstaller 的正常行为。
 
 ## 目录结构
 
 ```text
 .
 ├── HustNetwork_GUI.py    # 主程序
-├── HustNetwork_GUI.spec  # PyInstaller 配置文件
 ├── build.bat             # Windows 构建脚本
-├── requirements.txt      # Python 依赖
+├── requirements.txt      # 运行依赖
+├── requirements-build.txt # 构建依赖
 ├── resources.qrc         # Qt 资源文件
 ├── resources_rc.py       # 编译后的资源文件
 └── icon/                 # 图标文件目录

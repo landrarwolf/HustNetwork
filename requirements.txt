@@ -1,3 +1,4 @@
-pyinstaller==6.3.0
-PySide6==6.6.1
+# The application imports only QtCore, QtGui and QtWidgets.  The Essentials
+# distribution supplies those modules without the unused PySide6 Addons.
+PySide6-Essentials==6.6.1
 requests==2.31.0
